@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Let's Chat</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      let url = `ws://${window.location.host}/ws/socket-server/`;
+      const chatSocket = new WebSocket(url);
+
+      chatSocket.onmessage = function(e) {
+        let data = JSON.parse(e.data);
+        console.log('Data:', data);
+      };
+
+      document.addEventListener('DOMContentLoaded', (event) => {
+        let form = document.getElementById('form');
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          let message = e.target.message.value;
+          chatSocket.send(JSON.stringify({
+            'message': message
+          }));
+          form.reset();
+        });
+      });
+    </script>
+    <h1>Let's Chat</h1>
+    <form id="form">
+      <input type="text" name="message" />
+      <button type="submit">Send</button>
+    </form>
+  </body>
+</html>
