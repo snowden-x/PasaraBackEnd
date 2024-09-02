@@ -3,4 +3,5 @@ from . import views
 
 urlpatterns = [
     path('send_food_items/', views.lobby),
+    path('editables/', views.editables)
 ]

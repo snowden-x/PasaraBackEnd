@@ -1,96 +1,134 @@
 food_items = [
     {
-        "Food":'Waakye',
-        "Image":'waakye.jpg'
+        "Name": " Kose",
+        "Image": "kose.jpg",
+        'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Jollof",
+        "Name":"Jollof",
         "Image":"jollof.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Indomie",
-        "Image":"indomie.jpg"
+        "Name":"Indomie",
+        "Image":"indomie.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Kyerewa",
-        "Image":"kyerewa.jpg"
+        "Name":"Kyerewa",
+        "Image":"kyerewa.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Kyerewa",
-        "Image":"kyerewa.jpg"
+        "Name":"Kyerewa",
+        "Image":"kyerewa.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Kyerewa",
-        "Image":"kyerewa.jpg"
+        "Name":"Kyerewa",
+        "Image":"kyerewa.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Kyerewa",
-        "Image":"kyerewa.jpg"
+        "Name":"Kyerewa",
+        "Image":"kyerewa.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     }
 ]
 
 drink_items = [
     {
-        "Food":'Sobolo',
-        "Image":'sobolo.jpg'
+        "Name":'Sobolo',
+        "Image":'sobolo.jpg',
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Coke",
+        "Name":"Coke",
         "Image":"coke.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Fanta",
-        "Image":"fanta.jpg"
+        "Name":"Fanta",
+        "Image":"fanta.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Mosaic",
-        "Image":"mosaic.jpg"
+        "Name":"Mosaic",
+        "Image":"mosaic.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     }
 ]
 
 packages_items = [
     {
-        "Food":'Full Package',
-        "Image":'waakye.jpg'
+        "Name":'Full Package',
+        "Image":'waakye.jpg',
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"True Package",
+        "Name":"True Package",
         "Image":"jollof.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Indomie",
-        "Image":"indomie.jpg"
+        "Name":"Indomie",
+        "Image":"indomie.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Kyerewa",
-        "Image":"kyerewa.jpg"
+        "Name":"Kyerewa",
+        "Image":"kyerewa.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Kyerewa",
-        "Image":"kyerewa.jpg"
+        "Name":"Kyerewa",
+        "Image":"kyerewa.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Kyerewa",
-        "Image":"kyerewa.jpg"
+        "Name":"Kyerewa",
+        "Image":"kyerewa.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     },
     {
-        "Food":"Kyerewa",
-        "Image":"kyerewa.jpg"
+        "Name":"Kyerewa",
+        "Image":"kyerewa.jpg",
+'Description':'Tasty with a slice of Peanut',
+        'Price': 34
     }
 ]
 
 Indexer_of_Food_Menu = {
-    0: {"Menu_Name": "Food", "Menu_Content": food_items},
-    1: {"Menu_Name": "Drinks", "Menu_Content": drink_items}
+    0: {"Category": "Food", "Menu_Content": food_items},
+    1: {"Category": "Drinks", "Menu_Content": drink_items},
+    2: {"Category": "All" , "Menu_Content": food_items + drink_items}
 }
 
 
-def create_horizontal_list(indexer_of_food_menu):
-    return [indexer_of_food_menu[item]["Menu_Name"] for item in indexer_of_food_menu]
+def send_categories(indexer_of_food_menu):
+    return [indexer_of_food_menu[item]["Category"] for item in indexer_of_food_menu]
 
 
 def create_current_food_items_in_display(index, indexer_of_food_menu):
     return indexer_of_food_menu[index]['Menu_Content']
 
 
-
+def delete_item(indexer_of_food_menu,category,index):
+    return [indexer_of_food_menu[index]['Menu_Content'].pop(category)]
