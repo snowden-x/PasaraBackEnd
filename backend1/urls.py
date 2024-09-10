@@ -2,6 +2,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('send_food_items/', views.lobby),
-    path('editables/', views.editables)
+    path('editables/', views.editables),
 ]

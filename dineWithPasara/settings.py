@@ -84,8 +84,12 @@ WSGI_APPLICATION = 'dineWithPasara.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'pasaraeats',
+        'USER': 'attipoe',
+        'PASSWORD': 'bolatito224',
+        'HOST':'localhost',
+        'PORT':'5432',
     }
 }
 

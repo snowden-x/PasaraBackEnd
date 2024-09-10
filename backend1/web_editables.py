@@ -1,134 +1,71 @@
-food_items = [
-    {
-        "Name": " Kose",
-        "Image": "kose.jpg",
-        'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Jollof",
-        "Image":"jollof.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Indomie",
-        "Image":"indomie.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Kyerewa",
-        "Image":"kyerewa.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Kyerewa",
-        "Image":"kyerewa.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Kyerewa",
-        "Image":"kyerewa.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Kyerewa",
-        "Image":"kyerewa.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    }
-]
+from backend1.models import Category,Product
+import json
+class Editables:
+    categories = []
+    menu_content_box = {}
+    commands_to_go_live = []
 
-drink_items = [
-    {
-        "Name":'Sobolo',
-        "Image":'sobolo.jpg',
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Coke",
-        "Image":"coke.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Fanta",
-        "Image":"fanta.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Mosaic",
-        "Image":"mosaic.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    }
-]
+    def __init__(self, data):
 
-packages_items = [
-    {
-        "Name":'Full Package',
-        "Image":'waakye.jpg',
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"True Package",
-        "Image":"jollof.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Indomie",
-        "Image":"indomie.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Kyerewa",
-        "Image":"kyerewa.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Kyerewa",
-        "Image":"kyerewa.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Kyerewa",
-        "Image":"kyerewa.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    },
-    {
-        "Name":"Kyerewa",
-        "Image":"kyerewa.jpg",
-'Description':'Tasty with a slice of Peanut',
-        'Price': 34
-    }
-]
+        self.action = data.get('action', None)
+        self.content = data.get('content', None)
 
-Indexer_of_Food_Menu = {
-    0: {"Category": "Food", "Menu_Content": food_items},
-    1: {"Category": "Drinks", "Menu_Content": drink_items},
-    2: {"Category": "All" , "Menu_Content": food_items + drink_items}
-}
+    
+
+    def process_request(self):
+        match self.action:
+            case 'get_category':
+                #checks category for updates
+                if not self.__class__.categories:
+                    # fetch from data base
+                    self.__class__.categories = Category.objects.values('name')
+                    print(self.__class__.categories)
+                return [food_category['name'] for food_category in  list(self.__class__.categories)]
+
+            case 'get_menu_contents':
+                selectedCategory = self.content['selectedCategory']
+
+                if selectedCategory in self.__class__.menu_content_box:
+                    print('retrieved from here')
+                    return list(self.__class__.menu_content_box[selectedCategory])
+                else:
+                    menu_content = Product.objects.filter(category_id = self.content['selectedCategory']).values('name','description','price','image_url','id')
+                    self.__class__.menu_content_box[selectedCategory] = menu_content
+                    print(self.__class__.menu_content_box)
+                    return list(menu_content)
+
+            case 'delete_menu_content':
+                index = self.content['index']
+                selectedCategory = self.content['selectedCategory']
+                menu_content_box = self.__class__.menu_content_box
+
+                menu_content = list(menu_content_box[selectedCategory])
+                menu_content.pop(index)
+                menu_content_box[selectedCategory] = menu_content
 
 
-def send_categories(indexer_of_food_menu):
-    return [indexer_of_food_menu[item]["Category"] for item in indexer_of_food_menu]
+                return menu_content
 
+            case 'edit_item':
+                index = self.content['index']
+                selectedCategory = self.content['selectedCategory']
+                menu_content_box = self.__class__.menu_content_box
 
-def create_current_food_items_in_display(index, indexer_of_food_menu):
-    return indexer_of_food_menu[index]['Menu_Content']
+                menu_content = list(menu_content_box[selectedCategory])
+                menu_content[index] = self.content['editedItem']
+                menu_content_box[selectedCategory] = menu_content
+                return menu_content
 
+            case 'add_item':
+                selectedCategory = self.content['selectedCategory']
+                menu_content_box = self.__class__.menu_content_box
 
-def delete_item(indexer_of_food_menu,category,index):
-    return [indexer_of_food_menu[index]['Menu_Content'].pop(category)]
+                if selectedCategory not in self.__class__.menu_content_box:
+                    menu_content = Product.objects.filter(category_id=selectedCategory).values('name','description','price','image_url','id')
+                    menu_content_box[selectedCategory] = menu_content
+
+                menu_content = list(menu_content_box[selectedCategory])
+                menu_content.insert(0,self.content['addItem'])
+                menu_content_box[selectedCategory] = menu_content
+                return {'selectedCategory':selectedCategory,'menuContent':menu_content}
+
