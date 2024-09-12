@@ -10,6 +10,7 @@ def process_data():
     Category.objects.bulk_create(categories)
     print("Added successfully")
 
+process_data()
 
 food_category  = Category.objects.get(id=1)
 drink_category = Category.objects.get(id=2)
@@ -28,7 +29,8 @@ drink_data = [
     Product(name="Orange Juice", description="Freshly squeezed orange juice.", price=3.49, category=drink_category, image_url="http://example.com/orange_juice.jpg"),
     Product(name="Iced Tea", description="Refreshing iced tea with lemon.", price=2.49, category=drink_category, image_url="http://example.com/iced_tea.jpg"),
     Product(name="Espresso", description="Strong Italian coffee.", price=2.99, category=drink_category, image_url="http://example.com/espresso.jpg"),
-    Product(name="Lemonade", description="Sweet and tangy lemonade.", price=2.99, category=drink_category, image_url="http://example.com/lemonade.jpg")
+
+
 ]
 
 packages_data = [
@@ -45,3 +47,31 @@ Product.objects.bulk_create(drink_data)
 Product.objects.bulk_create(packages_data)
 
 #exec(open('scripts.py').read())
+
+"""
+#if selectedCategory not in self.__class__.menu_content_box:
+                 #   products = Product.objects.filter(category_id=self.content['selectedCategory']).values('name','description','price','image_url','id')
+                  #  product_details = {product['id']:
+                   ###       "description": product['description'],
+                      #      "price": product['price'],
+                       ##    "id": product['id']
+                        #}
+                        #for product in products
+                    #}
+
+                    menu_content_box[selectedCategory] = product_details
+                    print(addItem)
+
+                encoding_addItem = {
+                    addItem['id']:
+                        {
+                            "name": addItem['name'],
+                            "description": addItem['description'],
+                            "price":addItem['price'],
+                            "image_url":addItem['image_url']
+                        }
+                }
+
+
+
+"""
