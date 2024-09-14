@@ -5,11 +5,12 @@ def process_data():
         Category(name='Food'),
         Category(name='Drinks'),
         Category(name='Packages'),
+        Category(Name='Beverages')
         # Add more instances as needed
     ]
     Category.objects.bulk_create(categories)
     print("Added successfully")
-
+process_data()
 
 food_category  = Category.objects.get(id=1)
 drink_category = Category.objects.get(id=2)
