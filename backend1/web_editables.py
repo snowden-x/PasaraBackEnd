@@ -35,7 +35,7 @@ class Editables:
                     return menu_content
 
                 else:
-                    products = Product.objects.filter(category_id = self.content['selectedCategory']).values('name','description','price','image_url','id')
+                    products = Product.objects.filter(category_id = self.content['selectedCategory']).values('name','description','price','image_url','id','is_available')
 
                     product_details = {product['id']:
                                            {
@@ -43,7 +43,8 @@ class Editables:
                                                "description":product['description'],
                                                "price": product['price'],
                                                "image_url": product['image_url'],
-                                               "id":product['id']
+                                               "id":product['id'],
+                                               "is_available": product['is_available']
                                            }
                                        for product in products
                                        }
@@ -82,8 +83,7 @@ class Editables:
 
 
                 #for db
-                self.__class__.commands_to_go_live.append(partial(self.crud_edit
-                                                          ,selectedCategory=selectedCategory,
+                self.__class__.commands_to_go_live.append(partial(self.crud_edit,
                                                                   item_id=id_,editedItem=editedItem))
 
                 for id_, content in self.__class__.menu_content_box[selectedCategory].items():
@@ -105,11 +105,33 @@ class Editables:
 
                 return {'selectedCategory':"Content Added Successfully"}
 
+            case 'is_available':
+                menu_content = []
+                selectedCategory = self.content['selectedCategory']
+                menu_content_box = self.__class__.menu_content_box
+                item_to_edit_availability = self.content['item']
+                item_id = item_to_edit_availability['id']
+
+                current_state = item_to_edit_availability['is_available']
+
+                menu_content_box[selectedCategory][item_id]['is_available'] = not current_state
+
+                #for db
+                self.__class__.commands_to_go_live.append(partial(self.crud_available
+                                                                  , item_id=item_id,
+                                                                   state= not current_state))
+
+                for id_, content in self.__class__.menu_content_box[selectedCategory].items():
+                    menu_content.append(content)
+                return menu_content
+
             case 'apply_changes':
                 print("lets go")
                 for command in self.__class__.commands_to_go_live:
                     command()
                 self.__class__.commands_to_go_live.clear()
+                self.__class__.categories = []
+                self.__class__.menu_content_box = {}
                 return {'reply':'db_command'}
 
     @staticmethod
@@ -117,7 +139,7 @@ class Editables:
         Product.objects.get(id=item_id).delete()
 
     @staticmethod
-    def crud_edit(selectedCategory,item_id,editedItem):
+    def crud_edit(item_id,editedItem):
         print("I am runing")
         item_to_edit = Product.objects.get(id=item_id)
         print('This is the edited Item',item_to_edit)
@@ -126,6 +148,12 @@ class Editables:
         item_to_edit.price = editedItem['price']
         item_to_edit.image_url = editedItem['image_url']
         print("vrrom")
+        item_to_edit.save()
+
+    @staticmethod
+    def crud_available(item_id, state):
+        item_to_edit = Product.objects.get(id=item_id)
+        item_to_edit.is_available = state
         item_to_edit.save()
 
     @staticmethod
